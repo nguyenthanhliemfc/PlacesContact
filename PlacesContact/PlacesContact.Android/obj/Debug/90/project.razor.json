@@ -1,0 +1,14 @@
+{
+  "ProjectFilePath": "c:\\1Project\\XamarinForms\\PlacesContact\\PlacesContact\\PlacesContact.Android\\PlacesContact.Android.csproj",
+  "TargetFramework": "v9.0",
+  "TagHelpers": [],
+  "Configuration": {
+    "ConfigurationName": "UnsupportedRazor",
+    "LanguageVersion": "1.0",
+    "Extensions": [
+      {
+        "ExtensionName": "UnsupportedRazorExtension"
+      }
+    ]
+  }
+}
