@@ -7,7 +7,6 @@ namespace PlacesContact
 {
     public partial class App : Application
     {
-        public string apiKey = "AIzaSyCxSUaSfg7sHgblayQE6ihpOqwEd_0CDso";
         public App()
         {
             InitializeComponent();
