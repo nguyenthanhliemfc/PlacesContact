@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+using Matcha.BackgroundService.iOS;
+using ObjCRuntime;
 using UIKit;
 
 namespace PlacesContact.iOS
@@ -22,10 +24,11 @@ namespace PlacesContact.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            BackgroundAggregator.Init(this);
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
-
+            
             return base.FinishedLaunching(app, options);
-        }
+        }       
     }
 }

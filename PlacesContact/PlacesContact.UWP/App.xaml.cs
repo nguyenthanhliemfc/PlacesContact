@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Matcha.BackgroundService;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,8 +32,11 @@ namespace PlacesContact.UWP
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
-
-        /// <summary>
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            base.OnBackgroundActivated(args);
+            BackgroundAggregatorService.Instance.Start();
+        }        /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
@@ -52,6 +56,7 @@ namespace PlacesContact.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
+               
                 Xamarin.Forms.Forms.Init(e);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)

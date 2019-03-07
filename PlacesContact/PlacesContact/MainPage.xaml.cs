@@ -20,7 +20,7 @@ namespace PlacesContact
 {
     public partial class MainPage : ContentPage
     {
-        private static readonly string PlaceAPIkey = "YOUR_API_HERE";
+        private static readonly string PlaceAPIkey = "AIzaSyCxSUaSfg7sHgblayQE6ihpOqwEd_0CDso";
 
         private string googleQuery =
             "https://maps.googleapis.com/maps/api/place/textsearch/json?query={0}+{1}&type={2}&language=it&key=" +
@@ -39,21 +39,42 @@ namespace PlacesContact
         public MainPage()
         {
             InitializeComponent();
-            AddTypeToPicker();
+            AddTypeToPicker();            
         }
 
-        private async void NearBySearch()
+        public async void NearBySearch()
         {
-            ActivityIndicatorStatus.IsVisible = true;
-            var request = new GeolocationRequest(GeolocationAccuracy.Medium);
-            var location = await Geolocation.GetLocationAsync(request);
-            var result = await NearByPlaceSearch(nearbyQuery, location.Latitude.ToString(),
-                location.Longitude.ToString(), radius, typeSearch, "", "");
-            var listBusiness = new ObservableCollection<BusinessContact.Result>();
-            foreach (var item in result.results)listBusiness.Add(item);
-            LabelTotalResult.Text = "Total result: " + listBusiness.Count;
-            ListViewResult.ItemsSource = listBusiness;
-            ActivityIndicatorStatus.IsVisible = false;
+            try
+            {
+                ActivityIndicatorStatus.IsVisible = true;
+                var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                var location = await Geolocation.GetLocationAsync(request);
+
+                string lat, lng = "";
+                try
+                {
+                    lat = location.Latitude.ToString().Replace(",", ".");
+                    lng = location.Longitude.ToString().Replace(",", ".");
+                }
+                catch (Exception)
+                {
+                    lat = location.Latitude.ToString();
+                    lng = location.Longitude.ToString();
+                }                
+
+                var result = await NearByPlaceSearch(nearbyQuery, lat, lng, radius, typeSearch, "", "");
+
+                var listBusiness = new ObservableCollection<BusinessContact.Result>();
+                foreach (var item in result.results) listBusiness.Add(item);
+                LabelTotalResult.Text = "Total result: " + listBusiness.Count;
+                ListViewResult.ItemsSource = listBusiness;
+                ActivityIndicatorStatus.IsVisible = false;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Get current location error: " + e.Message);
+            }
+            
         }
 
 

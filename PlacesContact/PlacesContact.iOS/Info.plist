@@ -37,5 +37,9 @@
   
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Places Contact needs access location when open.</string>
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>fetch</string>
+  </array>
 </dict>
 </plist>

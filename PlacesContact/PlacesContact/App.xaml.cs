@@ -1,13 +1,14 @@
-﻿using System;
+﻿using PlacesContact.Models;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Matcha.BackgroundService;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace PlacesContact
 {
     public partial class App : Application
-    {
-        public string apiKey = "AIzaSyCxSUaSfg7sHgblayQE6ihpOqwEd_0CDso";
+    {        
         public App()
         {
             InitializeComponent();
@@ -17,12 +18,14 @@ namespace PlacesContact
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            
         }
 
         protected override void OnSleep()
         {
-            // Handle when your app sleeps
+            BackgroundAggregatorService.StopBackgroundService();
+            BackgroundAggregatorService.Add(() => new BackgroundJobs(3));
+            BackgroundAggregatorService.StartBackgroundService();
         }
 
         protected override void OnResume()

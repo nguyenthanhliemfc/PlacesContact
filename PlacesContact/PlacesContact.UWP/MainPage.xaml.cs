@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Matcha.BackgroundService.UWP;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace PlacesContact.UWP
         public MainPage()
         {
             this.InitializeComponent();
-
+            BackgroundAggregator.Init(this);
             LoadApplication(new PlacesContact.App());
         }
     }
