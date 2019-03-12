@@ -21,7 +21,7 @@ namespace PlacesContact
 {
     public partial class MainPage : ContentPage
     {
-        private static readonly string PlaceAPIkey = "AIzaSyCxSUaSfg7sHgblayQE6ihpOqwEd_0CDso";
+        private static readonly string PlaceAPIkey = "YOUR_API_KEY";
 
         private string googleQuery =
             "https://maps.googleapis.com/maps/api/place/textsearch/json?query={0}+{1}&type={2}&language=it&key=" +
