@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PlacesContact.Models;
 using PlacesContact.RestClient;
+using Plugin.LocalNotifications;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -31,7 +32,7 @@ namespace PlacesContact
             PlaceAPIkey;
 
         private readonly string detailsQuery =
-            "https://maps.googleapis.com/maps/api/place/details/json?placeid={0}&fields=name,rating,formatted_address,formatted_phone_number&key=" +
+            "https://maps.googleapis.com/maps/api/place/details/json?placeid={0}&fields=name,geometry,rating,formatted_address,formatted_phone_number&key=" +
             PlaceAPIkey;
 
         public string radius = "2000";
@@ -39,7 +40,45 @@ namespace PlacesContact
         public MainPage()
         {
             InitializeComponent();
-            AddTypeToPicker();            
+            AddTypeToPicker();
+            //MessagingCenter.Subscribe<object, string>(this, "BackgroundTask", async (sender, args) =>
+            //{
+            //    //Search and send result to Server in background
+            //    //Part 1: Search
+            //    try
+            //    {
+            //        var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+            //        var location = await Geolocation.GetLocationAsync(request);
+            //        string lat, lng = "";
+            //        try
+            //        {
+            //            lat = location.Latitude.ToString().Replace(",", ".");
+            //            lng = location.Longitude.ToString().Replace(",", ".");
+            //        }
+            //        catch (Exception)
+            //        {
+            //            lat = location.Latitude.ToString();
+            //            lng = location.Longitude.ToString();
+            //        }
+
+            //        var result = await NearByPlaceSearch(nearbyQuery, lat, lng, radius, typeSearch, "", "");
+            //        CrossLocalNotifications.Current.Show("Time: " + DateTime.Now.ToShortTimeString(), "Total: " + result.Count);
+
+            //        var listBusiness = new ObservableCollection<BusinessContact.Result>();
+            //        foreach (var item in result)
+            //        {
+            //            listBusiness.Add(item);                        
+            //            //Debug.WriteLine("Name of location: " + item.name);
+            //        }
+                    
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Debug.WriteLine("Get current location error: " + e.Message);
+            //    }
+            //    //Part 2: Send to Server
+            //    //...
+            //});
         }
 
         public async void NearBySearch()
@@ -47,6 +86,8 @@ namespace PlacesContact
             try
             {
                 ActivityIndicatorStatus.IsVisible = true;
+                ListViewResult.ItemsSource = null;
+                LabelTotalResult.Text = "Total result: ";
                 var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
                 var location = await Geolocation.GetLocationAsync(request);
 
@@ -65,8 +106,8 @@ namespace PlacesContact
                 var result = await NearByPlaceSearch(nearbyQuery, lat, lng, radius, typeSearch, "", "");
 
                 var listBusiness = new ObservableCollection<BusinessContact.Result>();
-                foreach (var item in result.results) listBusiness.Add(item);
-                LabelTotalResult.Text = "Total result: " + listBusiness.Count;
+                foreach (var item in result) listBusiness.Add(item);
+                LabelTotalResult.Text = "Total result: " + listBusiness.Count;                
                 ListViewResult.ItemsSource = listBusiness;
                 ActivityIndicatorStatus.IsVisible = false;
             }
@@ -76,17 +117,34 @@ namespace PlacesContact
             }
             
         }
+        public string pagetoken = "";
 
-
-        static async Task<BusinessContact.RootObject> NearByPlaceSearch(string googleQuery, string lat, string lng, string radius, string type,string keyword, string nextPageToken)
+        public async Task<List<BusinessContact.Result>> NearByPlaceSearch(string googleQuery, string lat, string lng, string radius, string type,string keyword, string nextPageToken)
         {
-            var pagetoken = nextPageToken != null ? "&pagetoken=" + nextPageToken : null;
+            pagetoken = nextPageToken != null ? "&pagetoken=" + nextPageToken : null;
             var requestUri = string.Format(googleQuery, lat, lng, radius, type, keyword) + pagetoken;
             try
-            {
+            {                
                 var restClient = new RestClient<BusinessContact.RootObject>();
                 var result = await restClient.GetAsync(requestUri);
-                return result;
+                var tempResult = result.results;
+                pagetoken = result.next_page_token;
+                if(pagetoken!=null)
+                {                    
+                    while (pagetoken!=null)
+                    {
+                        await Task.Delay(2000);
+                        restClient = new RestClient<BusinessContact.RootObject>();
+                        result = await restClient.GetAsync(requestUri + pagetoken);                        
+                        foreach (var item in result.results)
+                        {
+                            tempResult.Add(item);
+                        }
+                        pagetoken = result.next_page_token;
+                        
+                    }
+                }
+                return tempResult;
             }
             catch (Exception e)
             {
@@ -95,14 +153,14 @@ namespace PlacesContact
             return null;
         }
 
-        static async Task<BusinessContactDetail.RootObject> PlaceDetailsSearch(string detailsQuery,string placeID, string nextPageToken)
+        public async Task<BusinessContactDetail.RootObject> PlaceDetailsSearch(string detailsQuery,string placeID, string nextPageToken)
         {
-            var pagetoken = nextPageToken != null ? "&pagetoken=" + nextPageToken : null;
-            var requestUri = string.Format(detailsQuery, placeID) + pagetoken;
+            //pagetoken = nextPageToken != null ? "&pagetoken=" + nextPageToken : null;
+            var requestUri = string.Format(detailsQuery, placeID);
             try
             {
                 var restClient = new RestClient<BusinessContactDetail.RootObject>();
-                var result = await restClient.GetAsync(requestUri);
+                var result = await restClient.GetAsync(requestUri);                
                 return result;
             }
             catch (Exception e)
@@ -235,7 +293,7 @@ namespace PlacesContact
                 var result = await PlaceDetailsSearch(detailsQuery, selectedPlace.place_id, "");
                 var content = "";
                 if (result.result.geometry != null)
-                    content = "Location: " + result.result.geometry.location + "\nAddress: " +
+                    content = "Latitude: " + result.result.geometry.location.lat + "\nLongtitude: "+ result.result.geometry.location.lng + "\nAddress: " +
                               result.result.formatted_address + "\nPhone: " + result.result.formatted_phone_number;
                 else
                     content = "Address: " + result.result.formatted_address + "\nPhone: " +

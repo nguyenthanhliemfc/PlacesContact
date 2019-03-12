@@ -18,14 +18,14 @@ namespace PlacesContact
 
         protected override void OnStart()
         {
-            
+            BackgroundAggregatorService.StopBackgroundService();
+            BackgroundAggregatorService.Add(() => new BackgroundTaskJob(10)); //Task run every 10s
+            BackgroundAggregatorService.StartBackgroundService();
         }
 
         protected override void OnSleep()
         {
-            BackgroundAggregatorService.StopBackgroundService();
-            BackgroundAggregatorService.Add(() => new BackgroundJobs(3));
-            BackgroundAggregatorService.StartBackgroundService();
+            
         }
 
         protected override void OnResume()

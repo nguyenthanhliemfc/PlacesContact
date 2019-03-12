@@ -42,7 +42,7 @@ namespace PlacesContact.Models
             public string formatted_phone_number { get; set; }
             public Geometry geometry { get; set; }
             public string name { get; set; }
-            public double rating { get; set; }
+            public int rating { get; set; }
         }
 
         public class RootObject
