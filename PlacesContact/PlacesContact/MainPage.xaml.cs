@@ -295,6 +295,10 @@ namespace PlacesContact
             {
                 var selectedPlace = ListViewResult.SelectedItem as BusinessContact.Result;
                 var result = await PlaceDetailsSearch(detailsQuery, selectedPlace.place_id, "");
+                if (result.result == null)
+                {
+                    await DisplayAlert("Search", "Result return: " + result.status, "Ok");
+                }
                 var content = "";
                 if (result.result.geometry != null)
                     content = "Latitude: " + result.result.geometry.location.lat + "\nLongtitude: "+ result.result.geometry.location.lng + "\nAddress: " +
