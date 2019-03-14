@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -21,7 +21,7 @@ namespace PlacesContact
 {
     public partial class MainPage : ContentPage
     {
-        private static readonly string PlaceAPIkey = "YOUR_API_KEY";
+        private static readonly string PlaceAPIkey = "YOUR_API_HERE";
 
         private string googleQuery =
             "https://maps.googleapis.com/maps/api/place/textsearch/json?query={0}+{1}&type={2}&language=it&key=" +
@@ -35,7 +35,7 @@ namespace PlacesContact
             "https://maps.googleapis.com/maps/api/place/details/json?placeid={0}&fields=name,geometry,rating,formatted_address,formatted_phone_number&key=" +
             PlaceAPIkey;
 
-        public string radius = "2000";
+        public string radius = "1000";
         public string typeSearch = "Company";
         public MainPage()
         {
@@ -140,9 +140,12 @@ namespace PlacesContact
                         {
                             tempResult.Add(item);
                         }
-                        pagetoken = result.next_page_token;
-                        
+                        pagetoken = result.next_page_token;                        
                     }
+                }
+                if(tempResult.Count == 0 )
+                {
+                    await DisplayAlert("Search", "Result return: " + result.status,"Ok");
                 }
                 return tempResult;
             }
@@ -265,7 +268,8 @@ namespace PlacesContact
             typeList.Add("veterinary_care");
             typeList.Add("zoo");
             PickerType.ItemsSource = typeList;
-            PickerType.SelectedItem = "Company";
+            PickerType.SelectedItem = "company";
+            PickerType.Title = "company";
         }
 
         private void ButtonSearch_OnClicked(object sender, EventArgs e)
@@ -275,8 +279,8 @@ namespace PlacesContact
 
         private void SliderRadius_OnValueChanged(object sender, ValueChangedEventArgs e)
         {
-            radius = SliderRadius.Value.ToString();
-            LabelRadius.Text = radius;
+            radius =  Math.Round(SliderRadius.Value,0).ToString() + "000";            
+            LabelRadius.Text = Math.Round(SliderRadius.Value, 0).ToString() + "Km";
         }
 
         private void PickerType_OnSelectedIndexChanged(object sender, EventArgs e)
