@@ -21,7 +21,7 @@ namespace PlacesContact
 {
     public partial class MainPage : ContentPage
     {
-        private static readonly string PlaceAPIkey = "YOUR_API_HERE";
+        private static readonly string PlaceAPIkey = "YOUR_API_KEY";
 
         private string googleQuery =
             "https://maps.googleapis.com/maps/api/place/textsearch/json?query={0}+{1}&type={2}&language=it&key=" +
@@ -61,7 +61,7 @@ namespace PlacesContact
             //            lng = location.Longitude.ToString();
             //        }
 
-            //        var result = await NearByPlaceSearch(nearbyQuery, lat, lng, radius, typeSearch, "", "");
+            //        var result = await NearByPlaceSearch(nearbyQuery, lat, lng, radius, typeSearch, typeSearch, "");
             //        CrossLocalNotifications.Current.Show("Time: " + DateTime.Now.ToShortTimeString(), "Total: " + result.Count);
 
             //        var listBusiness = new ObservableCollection<BusinessContact.Result>();
@@ -70,7 +70,7 @@ namespace PlacesContact
             //            listBusiness.Add(item);                        
             //            //Debug.WriteLine("Name of location: " + item.name);
             //        }
-                    
+
             //    }
             //    catch (Exception e)
             //    {
@@ -103,7 +103,7 @@ namespace PlacesContact
                     lng = location.Longitude.ToString();
                 }                
 
-                var result = await NearByPlaceSearch(nearbyQuery, lat, lng, radius, typeSearch, "", "");
+                var result = await NearByPlaceSearch(nearbyQuery, lat, lng, radius, typeSearch, typeSearch, "");
 
                 var listBusiness = new ObservableCollection<BusinessContact.Result>();
                 foreach (var item in result) listBusiness.Add(item);
