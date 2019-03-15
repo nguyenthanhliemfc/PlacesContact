@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PlacesContact"
+             x:Class="PlacesContact.MainPage">    
+    <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand">
+        <StackLayout Margin="0,10,0,0">            
+            <Label Text="Radius in Km" HorizontalOptions="Center"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Slider x:Name="SliderRadius" WidthRequest="300" Maximum="10" Minimum="1" Value="1" ValueChanged="SliderRadius_OnValueChanged"/>
+                <Label Text="1Km" x:Name="LabelRadius"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Picker x:Name="PickerType" HorizontalOptions="CenterAndExpand" Title="Select a type to search" SelectedIndexChanged="PickerType_OnSelectedIndexChanged"/>
+                <Button Text="Search" x:Name="ButtonSearch" Clicked="ButtonSearch_OnClicked" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+            <ActivityIndicator x:Name="ActivityIndicatorStatus" WidthRequest="100" HeightRequest="100" IsRunning="True" IsVisible="False" IsEnabled="True"/>
+        </StackLayout>
+        <ListView x:Name="ListViewResult" HasUnevenRows="True" ItemSelected="ListViewResult_OnItemSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Margin="2,2,2,2">
+                            <Label Text="Name"/>
+                            <Label Text="{Binding name}" FontAttributes="Bold" TextColor="Green"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Label Text="Total result: " x:Name="LabelTotalResult" FontAttributes="Italic" HorizontalOptions="End"/>
+    </StackLayout>
+
+</ContentPage>

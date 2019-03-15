@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "184893783040",
+    "firebase_url": "https://placescontact-1551276795734.firebaseio.com",
+    "project_id": "placescontact-1551276795734",
+    "storage_bucket": "placescontact-1551276795734.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184893783040:android:6241ae42b25cb2a7",
+        "android_client_info": {
+          "package_name": "com.VitoAnthony.PlacesContact"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184893783040-lb48j1eb61dburma23ihmi93psreuo8p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD_2VfTHwF2dmmz-N0M6xKEL8imHp0f8I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
